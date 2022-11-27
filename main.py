@@ -18,6 +18,9 @@ class Diretide:
         self.photo2 = cv2.imread('screenshot/agree.png', 0)  # читаем картинку
         self.w2, self.h2 = self.photo2.shape[::-1]  # высота и ширина скриншота
 
+        self.resume1 = cv2.imread('screenshot/agree.png', 0)  # читаем картинку
+        self.w3, self.h3 = self.resume1.shape[::-1]  # высота и ширина скриншота
+
         print('1')
         time.sleep(1)
         print('2')
@@ -45,7 +48,17 @@ class Diretide:
                 self.agree_screen.save('screenshot/agree_screen.png')
                 print('found agree game!')  # Приняли игру
                 pyautogui.moveTo(self.x + 10, self.y + 5)
+                pyautogui.mouseUp()
+                time.sleep(0.4)
+                pyautogui.mouseDown()
+                pyautogui.mouseUp()
+                time.sleep(0.2)
+                pyautogui.mouseDown()
+                pyautogui.mouseUp()
+                time.sleep(0.2)
+                pyautogui.mouseDown()
                 self.flag2 = False
+                self.found_resume()
 
     def found_start(self):
         self.flag = True
@@ -87,6 +100,39 @@ class Diretide:
                 pyautogui.mouseDown()
                 print('click start game')  # Запустили поиск
                 self.found_agree()
+                self.flag = False
+
+    def found_resume(self):
+        self.flag = True
+        while self.flag:  # Пытаемся найти игру
+            print('not found start game')
+            self.screen_base = ImageGrab.grab(bbox=(0, 0, self.width1, self.height1))  # resolution
+            self.screen_base.save('D:/pythonptoject/test/screenshot/base_screen.png')
+
+            self.img_rgb3 = cv2.imread('screenshot/base_screen.png')  # Конвертируем пнг для opencv
+            self.img_gray3 = cv2.cvtColor(self.img_rgb3, cv2.COLOR_BGR2GRAY)  # чтобы быстрее искалось
+
+            self.res3 = cv2.matchTemplate(self.img_gray3, self.resume1, cv2.TM_CCOEFF_NORMED)  # поиск
+            self.loc3 = np.where(self.res3 >= 0.9)  # координаты
+
+            for pt in zip(*self.loc3[::-1]):
+                self.x = int(pt[0])
+                self.y = int(pt[1])
+                self.start_screen = ImageGrab.grab(bbox=(self.x, self.y, self.x + self.w, self.y + self.h))
+                self.start_screen.save('screenshot/start_screen.png')
+                print('found start game!')
+                pyautogui.moveTo(self.x + 10, self.y + 5)
+                pyautogui.mouseUp()
+                time.sleep(0.4)
+                pyautogui.mouseDown()
+                pyautogui.mouseUp()
+                time.sleep(0.2)
+                pyautogui.mouseDown()
+                pyautogui.mouseUp()
+                time.sleep(0.2)
+                pyautogui.mouseDown()
+                print('click start game')  # Нажали продолжить
+                self.found_start()
                 self.flag = False
 
 
