@@ -18,7 +18,7 @@ class Diretide:
         self.photo2 = cv2.imread('screenshot/agree.png', 0)  # читаем картинку
         self.w2, self.h2 = self.photo2.shape[::-1]  # высота и ширина скриншота
 
-        self.resume1 = cv2.imread('screenshot/agree.png', 0)  # читаем картинку
+        self.resume1 = cv2.imread('screenshot/resume.png', 0)  # читаем картинку
         self.w3, self.h3 = self.resume1.shape[::-1]  # высота и ширина скриншота
 
         print('1')
@@ -105,7 +105,7 @@ class Diretide:
     def found_resume(self):
         self.flag = True
         while self.flag:  # Пытаемся найти игру
-            print('not found start game')
+            print('not found resume game')
             self.screen_base = ImageGrab.grab(bbox=(0, 0, self.width1, self.height1))  # resolution
             self.screen_base.save('D:/pythonptoject/test/screenshot/base_screen.png')
 
@@ -118,9 +118,9 @@ class Diretide:
             for pt in zip(*self.loc3[::-1]):
                 self.x = int(pt[0])
                 self.y = int(pt[1])
-                self.start_screen = ImageGrab.grab(bbox=(self.x, self.y, self.x + self.w, self.y + self.h))
-                self.start_screen.save('screenshot/start_screen.png')
-                print('found start game!')
+                self.start_screen = ImageGrab.grab(bbox=(self.x, self.y, self.x + self.w3, self.y + self.h3))
+                self.start_screen.save('screenshot/resume_screen.png')
+                print('found resume game!')
                 pyautogui.moveTo(self.x + 10, self.y + 5)
                 pyautogui.mouseUp()
                 time.sleep(0.4)
@@ -131,7 +131,7 @@ class Diretide:
                 pyautogui.mouseUp()
                 time.sleep(0.2)
                 pyautogui.mouseDown()
-                print('click start game')  # Нажали продолжить
+                print('click resume game')  # Нажали продолжить
                 self.found_start()
                 self.flag = False
 
