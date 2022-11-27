@@ -10,7 +10,7 @@ class Diretide:
         self.root = tkinter.Tk()
         self.width1 = self.root.winfo_screenwidth()
         self.height1 = self.root.winfo_screenheight()
-        print(self.width1, self.height1)
+        print(self.width1, 'x', self.height1, sep='')
 
         self.template = cv2.imread('screenshot/go.png', 0)  # читаем картинку
         self.w, self.h = self.template.shape[::-1]  # высота и ширина скриншота
@@ -21,16 +21,20 @@ class Diretide:
         self.resume1 = cv2.imread('screenshot/resume.png', 0)  # читаем картинку
         self.w3, self.h3 = self.resume1.shape[::-1]  # высота и ширина скриншота
 
-        print('1')
+        self.hero1 = cv2.imread('screenshot/hero.png', 0)  # читаем картинку
+        self.w4, self.h4 = self.hero1.shape[::-1]  # высота и ширина скриншота
+
+        print('Запуск через:')
+        print('3')
         time.sleep(1)
         print('2')
         time.sleep(1)
-        print('3')
+        print('1')
         time.sleep(1)
 
     def found_agree(self):
-        self.flag2 = True
-        while self.flag2:  # Пытаемся найти поиск
+        self.flag = True
+        while self.flag:  # Пытаемся найти поиск
             print('not found agree game')
             self.screen_base = ImageGrab.grab(bbox=(0, 0, self.width1, self.height1))  # resolution
             self.screen_base.save('screenshot/base_screen.png')
@@ -57,8 +61,39 @@ class Diretide:
                 pyautogui.mouseUp()
                 time.sleep(0.2)
                 pyautogui.mouseDown()
-                self.flag2 = False
-                self.found_resume()
+                self.flag = False
+                self.hero()
+
+    def hero(self):
+        print('not found hero')
+        self.screen_base = ImageGrab.grab(bbox=(0, 0, self.width1, self.height1))  # resolution
+        self.screen_base.save('D:/pythonptoject/test/screenshot/base_screen.png')
+
+        self.img_rgb5 = cv2.imread('screenshot/base_screen.png')  # Конвертируем пнг для opencv
+        self.img_gray5 = cv2.cvtColor(self.img_rgb5, cv2.COLOR_BGR2GRAY)  # чтобы быстрее искалось
+
+        self.res5 = cv2.matchTemplate(self.img_gray5, self.hero1, cv2.TM_CCOEFF_NORMED)  # поиск
+        self.loc5 = np.where(self.res5 >= 0.9)  # координаты
+
+        for pt in zip(*self.loc5[::-1]):
+            self.x = int(pt[0])
+            self.y = int(pt[1])
+            self.start_screen = ImageGrab.grab(bbox=(self.x, self.y, self.x + self.w4, self.y + self.h4))
+            self.start_screen.save('screenshot/hero_screen.png')
+            print('found hero!')
+            pyautogui.moveTo(self.x + 10, self.y + 5)
+            pyautogui.mouseUp()
+            time.sleep(0.4)
+            pyautogui.mouseDown()
+            pyautogui.mouseUp()
+            time.sleep(0.2)
+            pyautogui.mouseDown()
+            pyautogui.mouseUp()
+            time.sleep(0.2)
+            pyautogui.mouseDown()
+            print('click on hero')  # Нажали на героя
+            # self.found_resume()
+            self.flag = False
 
     def found_start(self):
         self.flag = True
@@ -86,15 +121,6 @@ class Diretide:
                 pyautogui.mouseUp()
                 time.sleep(0.2)
                 pyautogui.mouseDown()
-                pyautogui.mouseUp()
-                time.sleep(0.2)
-                pyautogui.mouseDown()
-                pyautogui.moveTo(self.x + 210, self.y + 15)
-                time.sleep(2)
-                pyautogui.mouseUp()
-                time.sleep(0.2)
-                pyautogui.mouseDown()
-                time.sleep(0.2)
                 pyautogui.mouseUp()
                 time.sleep(0.2)
                 pyautogui.mouseDown()
@@ -132,10 +158,10 @@ class Diretide:
                 time.sleep(0.2)
                 pyautogui.mouseDown()
                 print('click resume game')  # Нажали продолжить
-                self.found_start()
+#                self.found_start()
                 self.flag = False
 
 
 if __name__ == '__main__':
     pt = Diretide()
-    pt.found_start()
+    pt.hero()
