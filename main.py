@@ -45,6 +45,7 @@ while flag:  # Пытаемся найти игру
         pyautogui.moveTo(x + 10, y + 5)
         pyautogui.mouseUp()
         time.sleep(0.4)
+        pyautogui.mouseDown()
         pyautogui.mouseUp()
         time.sleep(0.2)
         pyautogui.mouseDown()
